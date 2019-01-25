@@ -1,14 +1,17 @@
 #include <QCoreApplication>
-#include <QList>
+#include <QSize>
+#include <QDebug>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QPair>
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QList<int> i;
-    i.push_back(2);
-    i.push_back(3);
-    QJsonObject j;
-    j.insert("vals",QJsonArray(i));
+    QSize d(5,6);
+
+    QJsonObject ob;
+
+    ob["d"]=QJsonObject{{"h",d.height()},{"w",d.width()}};
+
+//    qDebug()<<d.toString();
     return a.exec();
 }

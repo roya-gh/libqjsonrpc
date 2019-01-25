@@ -18,6 +18,7 @@ public:
 
     ~JsonRPCClient() = default;
 
+public slots:
     void setNotification(bool);
     void setMethodName(const QString&);
     void setParams(const QVariant& );
@@ -27,13 +28,13 @@ public:
     void setUrl(const QUrl&);
     void setHost(const QString&);
     void setPort(int);
+    void dispatch();
 
     int errorCode();
     QString errorString();
     void isNotification();
     QVariant getResult();
 
-    void dispatch();
 
 private :
     bool m_isNotification;
@@ -45,6 +46,8 @@ private :
     QNetworkAccessManager httpManager;
     QNetworkRequest httpRequest;
     QNetworkReply *httpReply;
+
+    QJsonValue toJsonValue(const QVariant&);
 
 //private slots:
 //    void httpFinished();
