@@ -16,7 +16,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    qtjsonrpc.cpp
+    qtjsonrpc.cpp \
+    jsonrpcresponse.cpp \
+    jsonrpcrequest.cpp \
+    jsonrpcresult.cpp \
+    jsonrpcerror.cpp
 
 HEADERS += \
-    qtjsonrpc.h
+    qtjsonrpc.h \
+    jsonrpcresponse.h \
+    jsonrpcrequest.h \
+    jsonrpcresult.h \
+    jsonrpcerror.h

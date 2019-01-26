@@ -5,6 +5,8 @@
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include "jsonrpcresult.h"
+#include "jsonrpcerror.h"
 
 class JsonRPCClient : QObject
 {
@@ -54,8 +56,8 @@ private :
 //    void httpError(QNetworkReply::NetworkError);
 
 // signals:
-//    void finished();
-//    void error();
+    void finished(const JsonRPCResult&);
+    void error(const JsonRPCError&);
 };
 
 #endif // QTJSONRPC_H

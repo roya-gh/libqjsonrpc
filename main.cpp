@@ -1,17 +1,11 @@
 #include <QCoreApplication>
-#include <QSize>
 #include <QDebug>
-#include <QJsonObject>
-#include <QPair>
+#include "jsonrpcresult.h"
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QSize d(5,6);
+    JsonRPCResult r(8);
 
-    QJsonObject ob;
-
-    ob["d"]=QJsonObject{{"h",d.height()},{"w",d.width()}};
-
-//    qDebug()<<d.toString();
+    qDebug()<<r.id()<<r.jsonrpcV();
     return a.exec();
 }
