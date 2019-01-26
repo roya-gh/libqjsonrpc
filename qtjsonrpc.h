@@ -32,10 +32,10 @@ public slots:
     void setPort(int);
     void dispatch();
 
-    int errorCode();
-    QString errorString();
-    void isNotification();
-    QVariant getResult();
+//    int errorCode();
+//    QString errorString();
+//    void isNotification();
+//    QVariant getResult();
 
 
 private :
@@ -52,12 +52,13 @@ private :
     QJsonValue toJsonValue(const QVariant&);
 
 //private slots:
-//    void httpFinished();
-//    void httpError(QNetworkReply::NetworkError);
+    void httpFinished();
+    void httpError(QNetworkReply::NetworkError);
 
 // signals:
-    void finished(const JsonRPCResult&);
-    void error(const JsonRPCError&);
+    void jsonResultRecieved(const JsonRPCResult&);
+    void JsonErrorRecieved(const JsonRPCError&);
+    void networkError(const int ECode,const QString& EString);
 };
 
 #endif // QTJSONRPC_H

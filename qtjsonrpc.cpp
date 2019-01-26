@@ -5,6 +5,7 @@
 #include <QPoint>
 #include <QSize>
 #include <QLine>
+#include <QJsonDocument>
 
 //JsonRPCClient::JsonRPCClient(QObject *parent) :
 //    QObject(parent)
@@ -67,7 +68,12 @@ void JsonRPCClient::setPort(int port) {
 
 void JsonRPCClient::dispatch()
 {
-
+    httpRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/json-rpc" );
+    connect(httpReply, SIGNAL(error(QNetworkReply::NetworkError)),
+              this, SLOT(httpError(QNetworkReply::NetworkError)));
+    connect(httpReply, SIGNAL(finished()),
+                     this, SLOT(httpFinished()));
+  httpReply = httpManager.post(httpRequest,QByteArray(QJsonDocument(m_data).toJson()));
 }
 
 QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
@@ -121,4 +127,14 @@ QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
             return QJsonValue();
             break;
     }
+}
+
+void JsonRPCClient::httpFinished()
+{
+    qDebug()<<"network finish";
+}
+
+void JsonRPCClient::httpError(QNetworkReply::NetworkError)
+{
+    qDebug()<<"network error";
 }
