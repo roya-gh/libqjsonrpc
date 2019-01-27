@@ -12,10 +12,9 @@ class JsonRPCClient : QObject
 {
     Q_OBJECT
 public:
-    JsonRPCClient(QObject* parent = nullptr,
-                  bool notification=false, int id=0,const QString &methodName=QString(),
+    JsonRPCClient(bool notification=false, int id=0, const QString &methodName=QString(),
                   const QVariant& params=QVariant(),
-                  const QUrl& url=QUrl(""));
+                  const QUrl& url=QUrl(""), QObject* parent = nullptr);
 
 
     ~JsonRPCClient() = default;
@@ -51,11 +50,12 @@ private :
 
     QJsonValue toJsonValue(const QVariant&);
 
-//private slots:
-    void httpFinished();
+private slots:
+    void httpFinished(QNetworkReply *r);
     void httpError(QNetworkReply::NetworkError);
+    void sslerrors(QList<QSslError>);
 
-// signals:
+ signals:
     void jsonResultRecieved(const JsonRPCResult&);
     void JsonErrorRecieved(const JsonRPCError&);
     void networkError(const int ECode,const QString& EString);
