@@ -19,12 +19,15 @@ JsonRPCClient::JsonRPCClient(bool notification, int id,
                              const QString& methodName, const QVariant& params, const QUrl& url, QObject* parent):
     QObject(parent), m_isNotification(notification), m_data(), m_response()
     , m_errorCode(), m_errorString(), httpManager(), httpRequest() {
+  if(!m_isNotification)
+  {
     setId(id);
-    setMethodName(methodName);
     setParams(params);
+  }
+    setMethodName(methodName);
     setUrl(url);
     m_data.insert("jsonrpc", 2);
-    qDebug()<<m_data["jsonrpc"]<<m_data["method"]<<m_data["params"]<<m_data["id"];
+//    qDebug()<<m_data["jsonrpc"]<<m_data["method"]<<m_data["params"]<<m_data["id"];
 }
 
 
@@ -70,7 +73,7 @@ void JsonRPCClient::setPort(int port) {
 }
 
 void JsonRPCClient::dispatch() {
-    httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json-rpc");
+    httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
 //    connect(httpReply, SIGNAL(error(QNetworkReply::NetworkError)),
 //            this, SLOT(httpError(QNetworkReply::NetworkError)));
@@ -80,10 +83,7 @@ void JsonRPCClient::dispatch() {
 //            this, SLOT(httpFinished()));
 //    httpRequest.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     connect(&httpManager,SIGNAL(finished(QNetworkReply*)),this, SLOT(httpFinished(QNetworkReply*)));
-//    httpReply = httpManager.post(httpRequest, QByteArray(QJsonDocument(m_data).toJson()));
-    httpReply = httpManager.post(httpRequest,
-                                 QByteArray("{ \"jsonrpc\": 2 ,\"method\" : \"guru.test\", \"params\" "
-                                            ": [ \"Guru\" ], \"id\" : 123 }"));
+    httpReply = httpManager.post(httpRequest, QByteArray(QJsonDocument(m_data).toJson()));
 }
 
 QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
@@ -142,6 +142,7 @@ QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
 void JsonRPCClient::httpFinished(QNetworkReply *rep) {
     qDebug() << "network finish";
     if(rep->error() == QNetworkReply::NoError) {
+        qDebug()<<"no error";
         QByteArray r = rep->readAll();
         qDebug() << r.size();
         QJsonDocument j = QJsonDocument::fromJson(r);
