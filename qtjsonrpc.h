@@ -15,6 +15,9 @@ public:
     JsonRPCClient(bool notification=false, int id=0, const QString &methodName=QString(),
                   const QVariant& params=QVariant(),
                   const QUrl& url=QUrl(""), QObject* parent = nullptr);
+    JsonRPCClient(bool notification=false, int id=0, const QString &methodName=QString(),
+                  const QJsonObject=QJsonObject(),
+                  const QUrl& url=QUrl(""), QObject* parent = nullptr);
 
 
     ~JsonRPCClient() = default;
@@ -46,7 +49,7 @@ private :
 
     QNetworkAccessManager httpManager;
     QNetworkRequest httpRequest;
-    QNetworkReply *httpReply;
+//    QNetworkReply *httpReply;
 
     QJsonValue toJsonValue(const QVariant&);
 

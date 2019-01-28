@@ -19,15 +19,29 @@ JsonRPCClient::JsonRPCClient(bool notification, int id,
                              const QString& methodName, const QVariant& params, const QUrl& url, QObject* parent):
     QObject(parent), m_isNotification(notification), m_data(), m_response()
     , m_errorCode(), m_errorString(), httpManager(), httpRequest() {
-  if(!m_isNotification)
-  {
-    setId(id);
-    setParams(params);
-  }
+
+    m_data["jsonrpc"] = "2.0";
+    if(!m_isNotification) {
+        setId(id);
+        setParams(params);
+    }
     setMethodName(methodName);
     setUrl(url);
-    m_data.insert("jsonrpc", 2);
-//    qDebug()<<m_data["jsonrpc"]<<m_data["method"]<<m_data["params"]<<m_data["id"];
+    qDebug() << m_data["jsonrpc"] << m_data["method"] << m_data["params"] << m_data["id"];
+}
+
+JsonRPCClient::JsonRPCClient(bool notification, int id, const QString& methodName, const QJsonObject params, const QUrl& url,
+                             QObject* parent)
+    :    QObject(parent), m_isNotification(notification), m_data(), m_response()
+    , m_errorCode(), m_errorString(), httpManager(), httpRequest() {
+    m_data["jsonrpc"] = "2.0";
+    if(!m_isNotification) {
+        setId(id);
+        m_data["params"] = params;
+    }
+    setMethodName(methodName);
+    setUrl(url);
+    qDebug() << m_data["jsonrpc"] << m_data["method"] << m_data["params"] << m_data["id"];
 }
 
 
@@ -44,7 +58,7 @@ void JsonRPCClient::setParams(const QVariant& params) {
 }
 
 void JsonRPCClient::setId(int id) {
-    m_data["id"] = id;
+    m_data["id"] = int(id);
 }
 
 
@@ -75,15 +89,20 @@ void JsonRPCClient::setPort(int port) {
 void JsonRPCClient::dispatch() {
     httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-//    connect(httpReply, SIGNAL(error(QNetworkReply::NetworkError)),
-//            this, SLOT(httpError(QNetworkReply::NetworkError)));
-//    connect(httpReply, SIGNAL(sslErrors(QList<QSslError>)),
-//            this, SLOT(sslerrors(QList<QSslError>)));
-//    connect(httpReply, SIGNAL(finished()),
-//            this, SLOT(httpFinished()));
-//    httpRequest.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-    connect(&httpManager,SIGNAL(finished(QNetworkReply*)),this, SLOT(httpFinished(QNetworkReply*)));
-    httpReply = httpManager.post(httpRequest, QByteArray(QJsonDocument(m_data).toJson()));
+    //    connect(httpReply, SIGNAL(error(QNetworkReply::NetworkError)),
+    //            this, SLOT(httpError(QNetworkReply::NetworkError)));
+    //    connect(httpReply, SIGNAL(sslErrors(QList<QSslError>)),
+    //            this, SLOT(sslerrors(QList<QSslError>)));
+    //    connect(httpReply, SIGNAL(finished()),
+    //            this, SLOT(httpFinished()));
+    //    httpRequest.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    connect(&httpManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(httpFinished(QNetworkReply*)));
+
+    QJsonDocument doc(m_data);
+    QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
+    //    qDebug() << bytes;
+    httpManager.post(httpRequest, bytes);
+
 }
 
 QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
@@ -139,18 +158,28 @@ QJsonValue JsonRPCClient::toJsonValue(const QVariant& input) {
     }
 }
 
-void JsonRPCClient::httpFinished(QNetworkReply *rep) {
+void JsonRPCClient::httpFinished(QNetworkReply* rep) {
     qDebug() << "network finish";
     if(rep->error() == QNetworkReply::NoError) {
-        qDebug()<<"no error";
+        qDebug() << "no error";
         QByteArray r = rep->readAll();
         qDebug() << r.size();
         QJsonDocument j = QJsonDocument::fromJson(r);
         QJsonObject rootObject = j.object();
-        qDebug() << rootObject["jsonrpc"];
+        qDebug() << rootObject.value("result").toString();
+        for(QJsonObject::iterator i = rootObject.begin(); i != rootObject.end();
+                i++) {
+            qDebug() << i.key() << i.value();
+        }
+        //        for(const QString& key: rootObject.keys()) {
+        //            QJsonValue value = rootObject.value(key);
+        //            qDebug() << "Key = " << key << ", Value = " << value.toString();
+        //        }
+
+    } else {
+        qDebug() << rep->error() << rep->errorString();
     }
-    else
-        qDebug()<<rep->error()<<rep->errorString();
+    rep->deleteLater();
 }
 
 void JsonRPCClient::httpError(QNetworkReply::NetworkError err) {
