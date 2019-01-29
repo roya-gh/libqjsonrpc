@@ -21,8 +21,6 @@ public:
     void setErrorMessage(const QString&);
     void setErrorData(const QJsonObject&);
 
-
-
 private :
     int m_errorCode;
     QString m_errorMessage;

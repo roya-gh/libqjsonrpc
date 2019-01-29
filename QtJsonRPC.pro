@@ -21,7 +21,7 @@ SOURCES += \
     jsonrpcrequest.cpp \
     jsonrpcresult.cpp \
     jsonrpcerror.cpp \
-    jsonrpcbase.cpp
+    jsonrpcnotification.cpp
 
 HEADERS += \
     qtjsonrpc.h \
@@ -29,4 +29,4 @@ HEADERS += \
     jsonrpcrequest.h \
     jsonrpcresult.h \
     jsonrpcerror.h \
-    jsonrpcbase.h
+    jsonrpcnotification.h

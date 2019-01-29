@@ -13,32 +13,23 @@ class JsonRPCClient : QObject
 {
     Q_OBJECT
 public:
-    JsonRPCClient(const JsonRPCBase *request, const QUrl& url=QUrl(""), QObject* parent = nullptr);
-
-
+    JsonRPCClient(const QUrl& url=QUrl(""), QObject* parent = nullptr);
     ~JsonRPCClient() = default;
-
-
-
     void setUrl(const QUrl&);
     void setHost(const QString&);
     void setPort(int);
-    void dispatch();
+    void dispatch(const JsonRPCNotification&);
+    void dispatch(const JsonRPCRequest&);
 
 //    int errorCode();
 //    QString errorString();
 //    void isNotification();
 //    QVariant getResult();
 
-
 private :
-    JsonRPCBase *m_request;
-    QJsonObject m_response;
-
     QNetworkAccessManager httpManager;
     QNetworkRequest httpRequest;
 //    QNetworkReply *httpReply;
-
 
 private slots:
     void httpFinished(QNetworkReply *r);
@@ -47,7 +38,7 @@ private slots:
 
  signals:
     void jsonResultRecieved(const JsonRPCResult&);
-    void JsonErrorRecieved(const JsonRPCError&);
+    void errorRecieved(const JsonRPCError&);
     void networkError(const int ECode,const QString& EString);
 };
 

@@ -5,18 +5,17 @@
 #include <QJsonArray>
 #include <QUrl>
 
-JsonRPCRequest::JsonRPCRequest(int id,
-                               const QString& methodName, const QVariant& params, QObject* parent):
-    JsonRPCBase(methodName,parent){
-
+JsonRPCRequest::JsonRPCRequest(int id, const QString& methodName,
+                               const QVariant& params, QObject* parent):
+    JsonRPCNotification(methodName, parent) {
     setId(id);
     setParams(params);
     qDebug() << m_data["jsonrpc"] << m_data["method"] << m_data["params"] << m_data["id"];
 }
 
-JsonRPCRequest::JsonRPCRequest(int id, const QString& methodName, const QJsonObject params,
-                               QObject* parent):
-    JsonRPCBase(methodName,parent){
+JsonRPCRequest::JsonRPCRequest(int id, const QString& methodName,
+                               const QJsonObject params, QObject* parent):
+    JsonRPCNotification(methodName, parent) {
     setId(id);
     m_data["params"] = params;
     qDebug() << m_data["jsonrpc"] << m_data["method"] << m_data["params"] << m_data["id"];
@@ -29,8 +28,6 @@ void JsonRPCRequest::setParams(const QVariant& params) {
 void JsonRPCRequest::setId(int id) {
     m_data["id"] = int(id);
 }
-
-
 
 QJsonValue JsonRPCRequest::toJsonValue(const QVariant& input) {
     switch(input.type()) {

@@ -10,12 +10,10 @@
 #include <QNetworkReply>
 
 
-JsonRPCClient::JsonRPCClient(const JsonRPCBase *request, const QUrl& url, QObject* parent ):
-    QObject(parent), m_request(request),m_response(),httpManager(), httpRequest() {
+JsonRPCClient::JsonRPCClient(const QUrl& url, QObject* parent ):
+    QObject(parent),httpManager(), httpRequest() {
     setUrl(url);
 }
-
-
 
 void JsonRPCClient::setUrl(const QUrl& url) {
     httpRequest.setUrl(url);
@@ -29,17 +27,31 @@ void JsonRPCClient::setPort(int port) {
     httpRequest.url().setPort(port);
 }
 
-void JsonRPCClient::dispatch() {
+void JsonRPCClient::dispatch(const JsonRPCNotification & jrequest) {
     httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    connect(&httpManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(httpFinished(QNetworkReply*)));
+    connect(&httpManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(httpFinished(QNetworkReply*)));
 
-    QJsonDocument doc(m_request->data());
+    QJsonDocument doc(jrequest.data());
     QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
     //    qDebug() << bytes;
     httpManager.post(httpRequest, bytes);
 
 }
+
+void JsonRPCClient::dispatch(const JsonRPCRequest& jrequest) {
+    httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    connect(&httpManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(httpFinished(QNetworkReply*)));
+
+    QJsonDocument doc(jrequest.data());
+    QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
+    //    qDebug() << bytes;
+    httpManager.post(httpRequest, bytes);
+}
+
 
 
 
