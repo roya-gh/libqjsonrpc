@@ -7,27 +7,18 @@
 #include <QtNetwork/QNetworkReply>
 #include "jsonrpcresult.h"
 #include "jsonrpcerror.h"
+#include "jsonrpcrequest.h"
 
 class JsonRPCClient : QObject
 {
     Q_OBJECT
 public:
-    JsonRPCClient(bool notification=false, int id=0, const QString &methodName=QString(),
-                  const QVariant& params=QVariant(),
-                  const QUrl& url=QUrl(""), QObject* parent = nullptr);
-    JsonRPCClient(bool notification=false, int id=0, const QString &methodName=QString(),
-                  const QJsonObject=QJsonObject(),
-                  const QUrl& url=QUrl(""), QObject* parent = nullptr);
+    JsonRPCClient(const JsonRPCBase *request, const QUrl& url=QUrl(""), QObject* parent = nullptr);
 
 
     ~JsonRPCClient() = default;
 
-public slots:
-    void setNotification(bool);
-    void setMethodName(const QString&);
-    void setParams(const QVariant& );
-    void setId(int);
-//    void setId(QString);
+
 
     void setUrl(const QUrl&);
     void setHost(const QString&);
@@ -41,17 +32,13 @@ public slots:
 
 
 private :
-    bool m_isNotification;
-    QJsonObject m_data;
+    JsonRPCBase *m_request;
     QJsonObject m_response;
-    int m_errorCode;
-    QString m_errorString;
 
     QNetworkAccessManager httpManager;
     QNetworkRequest httpRequest;
 //    QNetworkReply *httpReply;
 
-    QJsonValue toJsonValue(const QVariant&);
 
 private slots:
     void httpFinished(QNetworkReply *r);

@@ -20,11 +20,13 @@ SOURCES += \
     jsonrpcresponse.cpp \
     jsonrpcrequest.cpp \
     jsonrpcresult.cpp \
-    jsonrpcerror.cpp
+    jsonrpcerror.cpp \
+    jsonrpcbase.cpp
 
 HEADERS += \
     qtjsonrpc.h \
     jsonrpcresponse.h \
     jsonrpcrequest.h \
     jsonrpcresult.h \
-    jsonrpcerror.h
+    jsonrpcerror.h \
+    jsonrpcbase.h
