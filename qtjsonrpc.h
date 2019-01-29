@@ -33,13 +33,13 @@ private :
 
 private slots:
     void httpFinished(QNetworkReply *r);
-    void httpError(QNetworkReply::NetworkError);
+//    void httpError(QNetworkReply::NetworkError);
     void sslerrors(QList<QSslError>);
 
  signals:
-    void jsonResultRecieved(const JsonRPCResult&);
+    void ResultRecieved(const JsonRPCResult&);
     void errorRecieved(const JsonRPCError&);
-    void networkError(const int ECode,const QString& EString);
+//    void networkError(const int ECode,const QString& EString);
 };
 
 #endif // QTJSONRPC_H

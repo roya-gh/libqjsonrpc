@@ -12,19 +12,12 @@ public:
 
     const QString& jsonrpcV();
     int id();
-
-
     void setJsonrpcV(const QString& );
     void setId(int );
 
-
-private:
+protected:
     int m_id;
     QString m_jsonrpcV;
-
-
-
-
 };
 
 #endif // JSONRPCRESPONSE_H

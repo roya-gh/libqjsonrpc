@@ -8,9 +8,6 @@ public:
     JsonRPCRequest(int id = 0, const QString& methodName = QString(),
                    const QVariant& params = QVariant(),
                    QObject* parent = nullptr);
-    JsonRPCRequest(int id = 0, const QString& methodName = QString(),
-                   const QJsonObject params = QJsonObject(),
-                   QObject* parent = nullptr);
     ~JsonRPCRequest() = default;
 public slots:
     void setParams(const QVariant& params);

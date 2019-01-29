@@ -6,14 +6,14 @@
 class JsonRPCResult : public JsonRPCResponse
 {
 public:
-    JsonRPCResult(int id = 0,const QJsonObject& result = QJsonObject(),
+    JsonRPCResult(int id = 0,const QVariant& result = QJsonObject(),
                   const QString& jsonrpcV = "2");
     ~JsonRPCResult()=default;
-    const QJsonObject& result();
+    const QVariant &result();
     void setResult(const QJsonObject&);
 
 private:
-    QJsonObject m_result;
+    QVariant m_result;
 
 };
 
