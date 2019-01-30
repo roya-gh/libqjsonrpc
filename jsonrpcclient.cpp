@@ -1,4 +1,4 @@
-#include "qtjsonrpc.h"
+#include "jsonrpcclient.h"
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>

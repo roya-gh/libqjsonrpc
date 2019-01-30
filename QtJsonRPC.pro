@@ -16,11 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    qtjsonrpc.cpp \
     jsonrpcresponse.cpp \
-    jsonrpcrequest.cpp
+    jsonrpcrequest.cpp \
+    jsonrpcclient.cpp
 
 HEADERS += \
-    qtjsonrpc.h \
     jsonrpcresponse.h \
-    jsonrpcrequest.h
+    jsonrpcrequest.h \
+    jsonrpcclient.h

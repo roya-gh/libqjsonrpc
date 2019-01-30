@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <QDebug>
-#include "qtjsonrpc.h"
+#include "jsonrpcclient.h"
 #include <QJsonArray>
 #include "jsonrpcrequest.h"
 int main(int argc, char* argv[]) {

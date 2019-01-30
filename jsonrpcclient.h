@@ -1,5 +1,5 @@
-#ifndef QTJSONRPC_H
-#define QTJSONRPC_H
+#ifndef JSONRPCCLIENT_H
+#define JSONRPCCLIENT_H
 
 #include <QJsonObject>
 #include <QUrl>
@@ -31,4 +31,4 @@ signals:
     void errorRecieved(const JsonRPCResponse&);
 };
 
-#endif // QTJSONRPC_H
+#endif // JSONRPCCLIENT_H
