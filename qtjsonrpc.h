@@ -5,41 +5,30 @@
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include "jsonrpcresult.h"
-#include "jsonrpcerror.h"
+#include "jsonrpcresponse.h"
 #include "jsonrpcrequest.h"
 
-class JsonRPCClient : QObject
-{
+class JsonRPCClient : QObject {
     Q_OBJECT
 public:
-    JsonRPCClient(const QUrl& url=QUrl(""), QObject* parent = nullptr);
+    JsonRPCClient(const QUrl& url = QUrl(""), QObject* parent = nullptr);
     ~JsonRPCClient() = default;
     void setUrl(const QUrl&);
     void setHost(const QString&);
     void setPort(int);
-    void dispatch(const JsonRPCNotification&);
     void dispatch(const JsonRPCRequest&);
-
-//    int errorCode();
-//    QString errorString();
-//    void isNotification();
-//    QVariant getResult();
 
 private :
     QNetworkAccessManager httpManager;
-    QNetworkRequest httpRequest;
-//    QNetworkReply *httpReply;
+    QUrl m_url;
 
 private slots:
-    void httpFinished(QNetworkReply *r);
-//    void httpError(QNetworkReply::NetworkError);
+    void httpFinished(QNetworkReply* r);
     void sslerrors(QList<QSslError>);
 
- signals:
-    void ResultRecieved(const JsonRPCResult&);
-    void errorRecieved(const JsonRPCError&);
-//    void networkError(const int ECode,const QString& EString);
+signals:
+    void ResultRecieved(const JsonRPCResponse&);
+    void errorRecieved(const JsonRPCResponse&);
 };
 
 #endif // QTJSONRPC_H

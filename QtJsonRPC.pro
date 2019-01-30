@@ -18,15 +18,9 @@ SOURCES += \
         main.cpp \
     qtjsonrpc.cpp \
     jsonrpcresponse.cpp \
-    jsonrpcrequest.cpp \
-    jsonrpcresult.cpp \
-    jsonrpcerror.cpp \
-    jsonrpcnotification.cpp
+    jsonrpcrequest.cpp
 
 HEADERS += \
     qtjsonrpc.h \
     jsonrpcresponse.h \
-    jsonrpcrequest.h \
-    jsonrpcresult.h \
-    jsonrpcerror.h \
-    jsonrpcnotification.h
+    jsonrpcrequest.h
