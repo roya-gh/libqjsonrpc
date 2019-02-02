@@ -28,7 +28,7 @@ private slots:
 
 signals:
     void ResultRecieved(const JsonRPCResponse&);
-    void errorRecieved(const JsonRPCResponse&);
+//    void errorRecieved(const JsonRPCResponse&);
 };
 
 #endif // JSONRPCCLIENT_H

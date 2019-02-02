@@ -44,26 +44,26 @@ void JsonRPCClient::httpFinished(QNetworkReply* rep) {
         QByteArray r = rep->readAll();
         QJsonDocument j = QJsonDocument::fromJson(r);
         QJsonObject rootObject = j.object();
-
+        qDebug()<<"finished ?!";
         if(rootObject.contains("error")) {
             JsonRPCResponse err(rootObject["id"].toInt(),
-                                rootObject["error"].toObject()["code"].toInt(),
-                                rootObject["error"].toObject()["message"].toString(),
-                                rootObject["error"].toObject()["data"].toObject(),
-                                rootObject["jsonrpc"].toString());
+                    rootObject["error"].toObject()["code"].toInt(),
+                    rootObject["error"].toObject()["message"].toString(),
+                    rootObject["error"].toObject()["data"].toObject(),
+                    rootObject["jsonrpc"].toString());
             qDebug() << err.id() << err.errorCode() << err.errorMessage() << err.jsonrpcV();
-            emit errorRecieved(err);
+            emit ResultRecieved(err);
         } else {
             JsonRPCResponse res(rootObject["id"].toInt(),
-                                rootObject["result"].toVariant(),
-                                rootObject["jsonrpc"].toString());
+                    rootObject["result"].toVariant(),
+                    rootObject["jsonrpc"].toString());
             qDebug() << res.id() << res.result().toString() << res.jsonrpcV();
             emit ResultRecieved(res);
         }
     } else {
         qDebug() << rep->error() << rep->errorString();
         JsonRPCResponse err(0, rep->error(), rep->errorString());
-        emit errorRecieved(err);
+        emit ResultRecieved(err);
     }
     rep->deleteLater();
 }
