@@ -9,6 +9,7 @@ CONFIG -= app_bundle
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+LIBS += -lqhttpserver
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -18,9 +19,14 @@ SOURCES += \
         main.cpp \
     jsonrpcresponse.cpp \
     jsonrpcrequest.cpp \
-    jsonrpcclient.cpp
-
+    jsonrpcclient.cpp \
+    jsonrpcserver.cpp \
+    requesthandlerfactory.cpp \
+    requesthandler.cpp
 HEADERS += \
     jsonrpcresponse.h \
     jsonrpcrequest.h \
-    jsonrpcclient.h
+    jsonrpcclient.h \
+    jsonrpcserver.h \
+    requesthandlerfactory.h \
+    requesthandler.h
