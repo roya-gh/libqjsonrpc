@@ -14,18 +14,19 @@ public:
     RequestHandler(QHttpRequest *req,
                    QHttpResponse *resp, QObject *parent = nullptr);
 
-    ~RequestHandler()=default;
+    ~RequestHandler();
 
 signals:
 
 public slots:
     void dataReceived(const QByteArray &data);
-    void parseData();
+private slots:
+    void handleRPCRequest();
 private :
     QHttpRequest *m_req;
     QHttpResponse *m_resp;
     QByteArray m_data;
-    virtual JsonRPCResponse rpcResult(QString , QJsonObject)=0;
+    virtual JsonRPCResponse determineRPCResult(QString methodName, QJsonObject params)=0;
 };
 
 #endif // REQUESTHANDLER_H

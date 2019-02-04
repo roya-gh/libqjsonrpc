@@ -4,3 +4,8 @@ RequestHandlerFactory::RequestHandlerFactory()
 {
 
 }
+
+RequestHandlerFactory::~RequestHandlerFactory()
+{
+
+}

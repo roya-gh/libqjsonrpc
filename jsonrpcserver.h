@@ -12,14 +12,14 @@ class JSonRPCServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit JSonRPCServer(RequestHandlerFactory *r, QObject *parent = nullptr);
-    ~JSonRPCServer()=default;
+    explicit JSonRPCServer(RequestHandlerFactory *r, quint16 port, QObject *parent = nullptr);
+    ~JSonRPCServer();
 
 signals:
 
 public slots:
-    void handle(QHttpRequest *req, QHttpResponse *resp);
-//    void parseJsonData(const QByteArray&);
+    void handleNewHttpRequest(QHttpRequest *req, QHttpResponse *resp);
+
 private :
     QHttpServer* server;
     RequestHandlerFactory* factory;
