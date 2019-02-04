@@ -6,13 +6,13 @@
 
 class JsonRPCResponse {
 public:
-    JsonRPCResponse(int id = 0, const QVariant& result = QJsonObject(),
+    JsonRPCResponse(const QVariant& result = QJsonObject(),int id = 0,
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(
-        int id = 0,
         int errorCode = 0,
         const QString& errorMessage = QString(),
         const QJsonObject& errorData = QJsonObject(),
+            int id = 0,
         const QString& jsonrpcV = "2");
 
     ~JsonRPCResponse() = default;
@@ -22,6 +22,7 @@ public:
     const QString& errorMessage();
     const QJsonObject& errorData();
     const QVariant& result();
+    QJsonObject data();
 
 public slots:
     void setJsonrpcV(const QString&);
@@ -38,6 +39,7 @@ private :
     QString m_errorMessage;
     QJsonObject m_errorData;
     QVariant m_result;
+    QJsonValue toJsonValue(const QVariant &input);
 };
 
 #endif // JSONRPCRESPONSE_H
