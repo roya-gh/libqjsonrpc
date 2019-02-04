@@ -7,8 +7,9 @@
 #include "requesthandler.h"
 #include "requesthandlerfactory.h"
 #include <QQueue>
+#include "libqjsonrpc_global.h"
 
-class JSonRPCServer : public QObject
+class LIBQJSONRPCSHARED_EXPORT JSonRPCServer : public QObject
 {
     Q_OBJECT
 public:

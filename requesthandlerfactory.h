@@ -2,10 +2,10 @@
 #define REQUESTHANDLERFACTORY_H
 
 #include "requesthandler.h"
+#include "libqjsonrpc_global.h"
 
 
-
-class RequestHandlerFactory
+class LIBQJSONRPCSHARED_EXPORT RequestHandlerFactory
 {
 public:
     explicit RequestHandlerFactory();

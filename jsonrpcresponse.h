@@ -3,8 +3,9 @@
 #include <QString>
 #include <QVariant>
 #include <QJsonObject>
+#include "libqjsonrpc_global.h"
 
-class JsonRPCResponse {
+class LIBQJSONRPCSHARED_EXPORT JsonRPCResponse {
 public:
     JsonRPCResponse(int id, const QVariant& result = QVariant(),
                     const QString& jsonrpcV = "2");

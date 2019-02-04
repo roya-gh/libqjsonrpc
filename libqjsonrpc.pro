@@ -1,32 +1,49 @@
-QT -= gui
-QT += network
-CONFIG += c++11 console ssl
-CONFIG -= app_bundle
+#-------------------------------------------------
+#
+# Project created by QtCreator 2019-02-04T23:27:14
+#
+#-------------------------------------------------
+
+QT       += network
+
+QT       -= gui
+
+TARGET = libqjsonrpc
+TEMPLATE = lib
+
+DEFINES += LIBQJSONRPC_LIBRARY
+
+LIBS += -lqhttpserver
 
 # The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
+# any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-LIBS += -lqhttpserver
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
+    requesthandler.cpp \
+    requesthandlerfactory.cpp \
+    jsonrpcserver.cpp \
     jsonrpcresponse.cpp \
     jsonrpcrequest.cpp \
-    jsonrpcclient.cpp \
-    jsonrpcserver.cpp \
-    requesthandlerfactory.cpp \
-    requesthandler.cpp
+    jsonrpcclient.cpp
+
 HEADERS += \
+        libqjsonrpc_global.h \ 
+    requesthandler.h \
+    requesthandlerfactory.h \
+    jsonrpcserver.h \
     jsonrpcresponse.h \
     jsonrpcrequest.h \
-    jsonrpcclient.h \
-    jsonrpcserver.h \
-    requesthandlerfactory.h \
-    requesthandler.h
+    jsonrpcclient.h
+
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}

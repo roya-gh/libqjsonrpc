@@ -8,7 +8,9 @@
 #include "jsonrpcresponse.h"
 #include "jsonrpcrequest.h"
 
-class JsonRPCClient : QObject {
+#include "libqjsonrpc_global.h"
+
+class LIBQJSONRPCSHARED_EXPORT JsonRPCClient : QObject {
     Q_OBJECT
 public:
     JsonRPCClient(const QUrl& url = QUrl(""), QObject* parent = nullptr);

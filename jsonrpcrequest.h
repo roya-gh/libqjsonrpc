@@ -3,7 +3,9 @@
 #include <QVariant>
 #include <QJsonObject>
 #include <QObject>
-class JsonRPCRequest: public QObject {
+#include "libqjsonrpc_global.h"
+
+class LIBQJSONRPCSHARED_EXPORT JsonRPCRequest: public QObject {
 public:
     JsonRPCRequest(int id,
                    const QString& methodName = QString(),
