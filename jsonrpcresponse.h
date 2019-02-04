@@ -6,23 +6,29 @@
 
 class JsonRPCResponse {
 public:
-    JsonRPCResponse(const QVariant& result = QJsonObject(),int id = 0,
+    JsonRPCResponse(int id, const QVariant& result = QVariant(),
+                    const QString& jsonrpcV = "2");
+    JsonRPCResponse(const QVariant& result = QVariant(),
+                    const QString& jsonrpcV = "2");
+    JsonRPCResponse(int id,
+                    int errorCode = 0,
+                    const QString& errorMessage = QString(),
+                    const QJsonObject& errorData = QJsonObject(),
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(
         int errorCode = 0,
         const QString& errorMessage = QString(),
         const QJsonObject& errorData = QJsonObject(),
-            int id = 0,
         const QString& jsonrpcV = "2");
 
     ~JsonRPCResponse() = default;
     int id();
-    const QString& jsonrpcV();
+    const QString jsonrpcV();
     int errorCode();
-    const QString& errorMessage();
-    const QJsonObject& errorData();
-    const QVariant& result();
-    QJsonObject data();
+    const QString errorMessage();
+    const QJsonObject errorData();
+    const QVariant result();
+    const QJsonObject data();
 
 public slots:
     void setJsonrpcV(const QString&);
@@ -30,16 +36,12 @@ public slots:
     void setErrorCode(int);
     void setErrorMessage(const QString&);
     void setErrorData(const QJsonObject&);
-    void setResult(const QJsonObject&);
+    void setResult(const QVariant &);
 
 private :
-    int m_id;
-    QString m_jsonrpcV;
-    int m_errorCode;
-    QString m_errorMessage;
-    QJsonObject m_errorData;
-    QVariant m_result;
-    QJsonValue toJsonValue(const QVariant &input);
+    QJsonObject m_data;
+    QJsonValue toJsonValue(const QVariant& input);
+    bool noId;
 };
 
 #endif // JSONRPCRESPONSE_H

@@ -30,7 +30,8 @@ void RequestHandler::handleRPCRequest()
 
     JsonRPCResponse result= determineRPCResult(rootObject["method"].toString(),
             rootObject["params"].toObject());
-
+    if(rootObject["id"]!=QJsonValue::Null)
+        result.setId(rootObject["id"].toInt());
     QJsonDocument doc(result.data());
     QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
 

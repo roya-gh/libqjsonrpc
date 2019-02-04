@@ -47,17 +47,17 @@ void JsonRPCClient::httpFinished(QNetworkReply* rep) {
         qDebug()<<"finished ?!";
         if(rootObject.contains("error")) {
             JsonRPCResponse err(
+                        rootObject["id"].toInt(),
                     rootObject["error"].toObject()["code"].toInt(),
                     rootObject["error"].toObject()["message"].toString(),
                     rootObject["error"].toObject()["data"].toObject(),
-                    rootObject["id"].toInt(),
                     rootObject["jsonrpc"].toString());
             qDebug() << err.id() << err.errorCode() << err.errorMessage() << err.jsonrpcV();
             emit ResultRecieved(err);
         } else {
             JsonRPCResponse res(
+                        rootObject["id"].toInt(),
                     rootObject["result"].toVariant(),
-                    rootObject["id"].toInt(),
                     rootObject["jsonrpc"].toString()
                     );
             qDebug() << res.id() << res.result().toString() << res.jsonrpcV();

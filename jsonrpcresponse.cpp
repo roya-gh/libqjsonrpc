@@ -7,80 +7,101 @@
 #include <QDateTime>
 #include <QUrl>
 
-JsonRPCResponse::JsonRPCResponse(int errorCode, const QString& errorMessage,
-                                 const QJsonObject& errorData, int id, const QString& jsonrpcV)
-    :  m_id(id), m_jsonrpcV(jsonrpcV), m_errorCode(errorCode),
-       m_errorMessage(errorMessage), m_errorData(errorData) {
-
+JsonRPCResponse::JsonRPCResponse(int id, int errorCode, const QString& errorMessage,
+                                 const QJsonObject& errorData, const QString& jsonrpcV) {
+    setId(id);
+    setJsonrpcV(jsonrpcV);
+    setErrorCode(errorCode);
+    setErrorMessage(errorMessage);
+    if(!errorData.empty()) {
+        setErrorData(errorData);
+    }
 }
-JsonRPCResponse::JsonRPCResponse(const QVariant& result, int id,
-                                 const QString& jsonrpcV):
-    m_id(id), m_jsonrpcV(jsonrpcV), m_result(result),
-    m_errorCode(), m_errorMessage() {
+JsonRPCResponse::JsonRPCResponse(int id, const QVariant& result,
+                                 const QString& jsonrpcV) {
+    setId(id);
+    setResult(result);
+    setJsonrpcV(jsonrpcV);
+}
 
+
+JsonRPCResponse::JsonRPCResponse(int errorCode, const QString& errorMessage,
+                                 const QJsonObject& errorData, const QString& jsonrpcV) {
+    setJsonrpcV(jsonrpcV);
+    setErrorCode(errorCode);
+    setErrorMessage(errorMessage);
+    if(errorData.empty()) {
+        setErrorData(errorData);
+    }
+}
+JsonRPCResponse::JsonRPCResponse(const QVariant& result,
+                                 const QString& jsonrpcV) {
+    setResult(result);
+    setJsonrpcV(jsonrpcV);
 }
 void JsonRPCResponse::setJsonrpcV(const QString& jsonrpcv) {
-    m_jsonrpcV = jsonrpcv;
+    m_data["jsonrpc"] = jsonrpcv;
 }
 
 void JsonRPCResponse::setId(int id) {
-    m_id = id;
+    m_data["id"] = id;
 }
 
-void JsonRPCResponse::setResult(const QJsonObject& result) {
-    m_result = result;
+void JsonRPCResponse::setResult(const QVariant& result) {
+    m_data["result"] = toJsonValue(result);
 }
 
 void JsonRPCResponse::setErrorCode(int errorCode) {
-    m_errorCode = errorCode;
+    m_data["error"].toObject()["code"] = errorCode;
 }
 
 void JsonRPCResponse::setErrorMessage(const QString& errorMessage) {
-    m_errorMessage = errorMessage;
+    m_data["error"].toObject()["message"] = errorMessage;
 }
 
 void JsonRPCResponse::setErrorData(const QJsonObject& errorData) {
-    m_errorData = errorData;
+    m_data["error"].toObject()["data"] = errorData;
 }
 
-const QVariant& JsonRPCResponse::result() {
-    return m_result;
+const QVariant JsonRPCResponse::result() {
+    return m_data["result"].toVariant();
 }
 
-QJsonObject JsonRPCResponse::data() {
-    QJsonObject d;
-    d["id"] = id();
-    d["jsonrpc"] = jsonrpcV();
-    if(errorCode() == 0 && errorMessage().isEmpty()) {
-        d["result"] = toJsonValue(result());
-        return d;
-    } else {
-        QJsonObject errobj;
-        errobj["code"] = errorCode();
-        errobj["message"] = errorMessage();
-        //for error data do sth
-        d["error"] = errobj;
-        return d;
-    }
+const QJsonObject JsonRPCResponse::data() {
+    //    QJsonObject d;
+    //    d["id"] = id();
+    //    d["jsonrpc"] = jsonrpcV();
+    //    if(errorCode() == 0 && errorMessage().isEmpty()) {
+    //        d["result"] = toJsonValue(result());
+    //        return d;
+    //    } else {
+    //        QJsonObject errobj;
+    //        errobj["code"] = errorCode();
+    //        errobj["message"] = errorMessage();
+    //        //for error data do sth
+    //        d["error"] = errobj;
+    //        return d;
+    //    }
+    return m_data;
 }
 
 int JsonRPCResponse::errorCode() {
-    return m_errorCode;
+    return m_data["error"].toObject()["code"].toInt();
 }
 
-const QString& JsonRPCResponse::errorMessage() {
-    return m_errorMessage;
+const QString JsonRPCResponse::errorMessage() {
+    return m_data["error"].toObject()["message"].toString();
 }
 
-const QJsonObject& JsonRPCResponse::errorData() {
-    return m_errorData;
+const QJsonObject JsonRPCResponse::errorData() {
+    return m_data["error"].toObject()["data"].toObject();
 }
-const QString& JsonRPCResponse::jsonrpcV() {
-    return m_jsonrpcV;
+const QString JsonRPCResponse::jsonrpcV() {
+    return m_data["jsonrpc"].toString();
 }
 
 int JsonRPCResponse::id() {
-    return m_id;
+    return m_data["id"].toInt();
 }
 
 QJsonValue JsonRPCResponse::toJsonValue(const QVariant& input) {
