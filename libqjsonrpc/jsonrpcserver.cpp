@@ -4,16 +4,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-JSonRPCServer::JSonRPCServer(RequestHandlerFactory* r,quint16 port, QObject* parent): QObject(parent), factory(r), q() {
-    server = new QHttpServer;
-    server->listen(QHostAddress::Any, port);
-    connect(server, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
+JSonRPCServer::JSonRPCServer(QObject* parent):
+    QHttpServer(parent) {
+    connect(this, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
             this, SLOT(handleNewHttpRequest(QHttpRequest*, QHttpResponse*)));
 }
 
-JSonRPCServer::~JSonRPCServer()
-{
-    server->deleteLater();
+void JSonRPCServer::setFactory(RequestHandlerFactory* f) {
+    factory = f;
 }
 
 void JSonRPCServer::handleNewHttpRequest(QHttpRequest* req, QHttpResponse* resp) {

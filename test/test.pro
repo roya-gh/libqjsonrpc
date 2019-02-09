@@ -1,6 +1,9 @@
 QT       += testlib
 
 QT       -= gui
+QT       += network
+LIBS += -lqhttpserver
+
 
 TARGET = tst_jsonrpcserver
 CONFIG   += console

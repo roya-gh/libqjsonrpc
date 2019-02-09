@@ -9,12 +9,13 @@
 #include <QQueue>
 #include "libqjsonrpc_global.h"
 
-class LIBQJSONRPCSHARED_EXPORT JSonRPCServer : public QObject
+class LIBQJSONRPCSHARED_EXPORT JSonRPCServer : public QHttpServer
 {
     Q_OBJECT
 public:
-    explicit JSonRPCServer(RequestHandlerFactory *r, quint16 port, QObject *parent = nullptr);
-    ~JSonRPCServer();
+    explicit JSonRPCServer(QObject *parent = nullptr);
+    ~JSonRPCServer()=default;
+    void setFactory(RequestHandlerFactory*);
 
 signals:
 
@@ -22,7 +23,7 @@ public slots:
     void handleNewHttpRequest(QHttpRequest *req, QHttpResponse *resp);
 
 private :
-    QHttpServer* server;
+//    QHttpServer* server;
     RequestHandlerFactory* factory;
     QQueue<RequestHandler*> q;
 };

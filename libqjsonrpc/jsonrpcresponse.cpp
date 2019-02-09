@@ -66,7 +66,7 @@ void JsonRPCResponse::setErrorData(const QJsonObject& errorData) {
     m_data["error"].toObject()["data"] = errorData;
 }
 
-const QVariant JsonRPCResponse::result() {
+const QVariant JsonRPCResponse::result()const {
     return m_data["result"].toVariant();
 }
 
@@ -90,22 +90,22 @@ const QJsonObject JsonRPCResponse::data() {
     return m_data;
 }
 
-int JsonRPCResponse::errorCode() {
+int JsonRPCResponse::errorCode()const {
     return m_data["error"].toObject()["code"].toInt();
 }
 
-const QString JsonRPCResponse::errorMessage() {
+const QString JsonRPCResponse::errorMessage()const {
     return m_data["error"].toObject()["message"].toString();
 }
 
-const QJsonObject JsonRPCResponse::errorData() {
+const QJsonObject JsonRPCResponse::errorData()const {
     return m_data["error"].toObject()["data"].toObject();
 }
-const QString JsonRPCResponse::jsonrpcV() {
+const QString JsonRPCResponse::jsonrpcV()const {
     return m_data["jsonrpc"].toString();
 }
 
-int JsonRPCResponse::id() {
+int JsonRPCResponse::id()const {
     return m_data["id"].toInt();
 }
 

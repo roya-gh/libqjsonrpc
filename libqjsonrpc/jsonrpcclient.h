@@ -10,14 +10,12 @@
 
 #include "libqjsonrpc_global.h"
 
-class LIBQJSONRPCSHARED_EXPORT JsonRPCClient : QObject {
+class LIBQJSONRPCSHARED_EXPORT JsonRPCClient :public QObject {
     Q_OBJECT
 public:
     JsonRPCClient(const QUrl& url = QUrl(""), QObject* parent = nullptr);
     ~JsonRPCClient() = default;
     void setUrl(const QUrl&);
-    void setHost(const QString&);
-    void setPort(int);
     void dispatch(const JsonRPCRequest&);
 
 private :

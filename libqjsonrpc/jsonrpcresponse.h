@@ -7,12 +7,12 @@
 
 class LIBQJSONRPCSHARED_EXPORT JsonRPCResponse {
 public:
-    JsonRPCResponse(int id, const QVariant& result = QVariant(),
+    JsonRPCResponse(int id, const QVariant& result,
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(const QVariant& result = QVariant(),
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(int id,
-                    int errorCode = 0,
+                    int errorCode ,
                     const QString& errorMessage = QString(),
                     const QJsonObject& errorData = QJsonObject(),
                     const QString& jsonrpcV = "2");
@@ -23,12 +23,12 @@ public:
         const QString& jsonrpcV = "2");
 
     ~JsonRPCResponse() = default;
-    int id();
-    const QString jsonrpcV();
-    int errorCode();
-    const QString errorMessage();
-    const QJsonObject errorData();
-    const QVariant result();
+    int id() const;
+    const QString jsonrpcV()const;
+    int errorCode()const;
+    const QString errorMessage() const;
+    const QJsonObject errorData() const;
+    const QVariant result()const;
     const QJsonObject data();
 
 public slots:

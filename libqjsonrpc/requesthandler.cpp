@@ -21,7 +21,7 @@ void RequestHandler::dataReceived(const QByteArray& data) {
 void RequestHandler::handleRPCRequest() {
     QJsonDocument j = QJsonDocument::fromJson(m_data);
     QJsonObject rootObject = j.object();
-    qDebug() << rootObject["jsonrpc"] << rootObject["method"] << rootObject["id"]
+    qDebug() <<"server handling request : " <<rootObject["jsonrpc"] << rootObject["method"] << rootObject["id"]
              << rootObject["params"].type();
 
     JsonRPCResponse result = determineRPCResult(rootObject["method"].toString(),

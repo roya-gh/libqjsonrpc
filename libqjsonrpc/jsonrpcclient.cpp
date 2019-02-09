@@ -12,20 +12,13 @@
 
 
 JsonRPCClient::JsonRPCClient(const QUrl& url, QObject* parent):
-    QObject(parent), httpManager(), m_url(url) {
+    QObject(parent), m_url(url) {
 }
 
 void JsonRPCClient::setUrl(const QUrl& url) {
     m_url = url;
 }
 
-void JsonRPCClient::setHost(const QString& host) {
-    m_url.setHost(host);
-}
-
-void JsonRPCClient::setPort(int port) {
-    m_url.setPort(port);
-}
 
 void JsonRPCClient::dispatch(const JsonRPCRequest& jrequest) {
     QNetworkRequest httpRequest(m_url);
@@ -33,7 +26,8 @@ void JsonRPCClient::dispatch(const JsonRPCRequest& jrequest) {
 
     connect(&httpManager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(httpFinished(QNetworkReply*)));
-
+//    qDebug() << jrequest.data();
+//    qDebug() << m_url;
     QJsonDocument doc(jrequest.data());
     QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
     httpManager.post(httpRequest, bytes);
@@ -52,7 +46,7 @@ void JsonRPCClient::httpFinished(QNetworkReply* rep) {
                 rootObject["error"].toObject()["message"].toString(),
                 rootObject["error"].toObject()["data"].toObject(),
                 rootObject["jsonrpc"].toString());
-            qDebug() << err.id() << err.errorCode() << err.errorMessage() << err.jsonrpcV();
+            qDebug() << "***"<<err.id() << err.errorCode() << err.errorMessage() << err.jsonrpcV();
             emit ResultRecieved(err);
         } else {
             if(rootObject["id"] != QJsonValue::Null) {
@@ -62,18 +56,18 @@ void JsonRPCClient::httpFinished(QNetworkReply* rep) {
                     rootObject["jsonrpc"].toString()
                 );
                 emit ResultRecieved(res);
-                qDebug() << res.id() << res.result().toString() << res.jsonrpcV();
+                qDebug() <<"***" <<res.data() <<res.id() << res.result().toString() << res.jsonrpcV();
             } else {
                 JsonRPCResponse res(
                     rootObject["result"].toVariant(),
                     rootObject["jsonrpc"].toString()
                 );
                 emit ResultRecieved(res);
-                qDebug() << res.result().toString() << res.jsonrpcV();
+                qDebug() << "***"<<res.result().toString() << res.jsonrpcV();
             }
         }
     } else {
-        qDebug() << rep->error() << rep->errorString();
+//        qDebug() << rep->error() << rep->errorString();
         JsonRPCResponse err(0, rep->error(), rep->errorString());
         emit ResultRecieved(err);
     }
