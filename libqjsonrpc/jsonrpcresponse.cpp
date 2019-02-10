@@ -17,11 +17,16 @@ JsonRPCResponse::JsonRPCResponse(int id, int errorCode, const QString& errorMess
         setErrorData(errorData);
     }
 }
+JsonRPCResponse::JsonRPCResponse()
+{
+    setJsonrpcV("2");
+}
+
 JsonRPCResponse::JsonRPCResponse(int id, const QVariant& result,
-                                 const QString& jsonrpcV) {
+                                 const QString& jsonrpcv) {
     setId(id);
     setResult(result);
-    setJsonrpcV(jsonrpcV);
+    setJsonrpcV(jsonrpcv);
 }
 
 
@@ -33,7 +38,7 @@ JsonRPCResponse::JsonRPCResponse(int errorCode, const QString& errorMessage,
     if(errorData.empty()) {
         setErrorData(errorData);
     }
-    noId =true;
+    noId = true;
 }
 JsonRPCResponse::JsonRPCResponse(const QVariant& result,
                                  const QString& jsonrpcV) {
@@ -46,7 +51,7 @@ void JsonRPCResponse::setJsonrpcV(const QString& jsonrpcv) {
 }
 
 void JsonRPCResponse::setId(int id) {
-    noId =false;
+    noId = false;
     m_data["id"] = id;
 }
 
@@ -85,8 +90,9 @@ const QJsonObject JsonRPCResponse::data() {
     //        d["error"] = errobj;
     //        return d;
     //    }
-    if(noId)
+    if(noId) {
         m_data.remove("id");
+    }
     return m_data;
 }
 
@@ -111,63 +117,63 @@ int JsonRPCResponse::id()const {
 
 QJsonValue JsonRPCResponse::toJsonValue(const QVariant& input) {
     switch(input.type()) {
-    case QMetaType::Int:
-        return input.toInt();
-        break;
-    case QMetaType::Bool:
-        return input.toBool();
-        break;
-    case QMetaType::QChar:
-        return input.toString();
-        break;
-    case QMetaType::Double:
-        return input.toDouble();
-        break;
-    case QMetaType::QString:
-        return input.toString();
-        break;
-    case QMetaType::QDate:
-        return input.toDate().toString("yyyy-MM-dd");
-        break;
-    case QMetaType::QDateTime:
-        return input.toDateTime().toString("yyyy-MM-ddThh:mm:ss.zzzZ");
-        break;
-    case QMetaType::QTime:
-        return input.toTime().toString("hh:mm:ss.zzzZ");
-        break;
-    case QMetaType::QUrl:
-        return input.toUrl().toString();
-        break;
-    case QMetaType::QVariantList: {
-        QList<QVariant> list = input.toList();
-        QJsonArray output;
-        for(const QVariant& item : list) {
-            output.push_back(toJsonValue(item));
+        case QMetaType::Int:
+            return input.toInt();
+            break;
+        case QMetaType::Bool:
+            return input.toBool();
+            break;
+        case QMetaType::QChar:
+            return input.toString();
+            break;
+        case QMetaType::Double:
+            return input.toDouble();
+            break;
+        case QMetaType::QString:
+            return input.toString();
+            break;
+        case QMetaType::QDate:
+            return input.toDate().toString("yyyy-MM-dd");
+            break;
+        case QMetaType::QDateTime:
+            return input.toDateTime().toString("yyyy-MM-ddThh:mm:ss.zzzZ");
+            break;
+        case QMetaType::QTime:
+            return input.toTime().toString("hh:mm:ss.zzzZ");
+            break;
+        case QMetaType::QUrl:
+            return input.toUrl().toString();
+            break;
+        case QMetaType::QVariantList: {
+            QList<QVariant> list = input.toList();
+            QJsonArray output;
+            for(const QVariant& item : list) {
+                output.push_back(toJsonValue(item));
+            }
+            return output;
         }
-        return output;
-    }
         break;
-    case QMetaType::QStringList: {
-        QStringList list = input.toStringList();
-        QJsonArray output;
-        for(const QString& item : list) {
-            output.push_back(item);
+        case QMetaType::QStringList: {
+            QStringList list = input.toStringList();
+            QJsonArray output;
+            for(const QString& item : list) {
+                output.push_back(item);
+            }
+            return output;
         }
-        return output;
-    }
         break;
-    case QMetaType::QJsonValue:
-        return input.toJsonValue();
-        break;
-    case QMetaType::QJsonObject:
-        return input.toJsonObject();
-        break;
-    case QMetaType::QJsonArray:
-        return input.toJsonArray();
-        break;
+        case QMetaType::QJsonValue:
+            return input.toJsonValue();
+            break;
+        case QMetaType::QJsonObject:
+            return input.toJsonObject();
+            break;
+        case QMetaType::QJsonArray:
+            return input.toJsonArray();
+            break;
 
-    default:
-        return QJsonValue();
-        break;
+        default:
+            return QJsonValue();
+            break;
     }
 }

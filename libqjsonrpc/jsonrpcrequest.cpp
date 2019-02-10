@@ -1,5 +1,4 @@
 #include "jsonrpcrequest.h"
-#include <QDebug>
 #include <QDate>
 #include <QDateTime>
 #include <QJsonArray>

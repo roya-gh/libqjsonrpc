@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <jsonrpcserver.h>
 #include <jsonrpcclient.h>
+#include <jsonrpcresponse.h>
 
 class Handler : public RequestHandler {
 public:
@@ -22,7 +23,8 @@ public:
             temp = i - j;
         }
         //TODO: handle error
-        JsonRPCResponse res(temp);
+        JsonRPCResponse res;
+        res.setResult(temp);
         return res;
     }
 };

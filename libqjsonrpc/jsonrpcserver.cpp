@@ -1,5 +1,4 @@
 #include "jsonrpcserver.h"
-#include <QDebug>
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>

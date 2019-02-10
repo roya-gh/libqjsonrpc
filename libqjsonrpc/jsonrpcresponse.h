@@ -7,18 +7,19 @@
 
 class LIBQJSONRPCSHARED_EXPORT JsonRPCResponse {
 public:
+    JsonRPCResponse();
     JsonRPCResponse(int id, const QVariant& result,
                     const QString& jsonrpcV = "2");
-    JsonRPCResponse(const QVariant& result = QVariant(),
+    JsonRPCResponse(const QVariant& result ,
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(int id,
                     int errorCode ,
-                    const QString& errorMessage = QString(),
+                    const QString& errorMessage ,
                     const QJsonObject& errorData = QJsonObject(),
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(
-        int errorCode = 0,
-        const QString& errorMessage = QString(),
+        int errorCode,
+        const QString& errorMessage ,
         const QJsonObject& errorData = QJsonObject(),
         const QString& jsonrpcV = "2");
 

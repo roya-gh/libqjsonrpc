@@ -21,12 +21,9 @@ void RequestHandler::dataReceived(const QByteArray& data) {
 void RequestHandler::handleRPCRequest() {
     QJsonDocument j = QJsonDocument::fromJson(m_data);
     QJsonObject rootObject = j.object();
-    qDebug() <<"server handling request : " <<rootObject["jsonrpc"] << rootObject["method"] << rootObject["id"]
-             << rootObject["params"].type();
 
     JsonRPCResponse result = determineRPCResult(rootObject["method"].toString(),
                              rootObject["params"].toObject());
-
 
     m_resp->writeHead(200); // everything is OK
     //only send a rpc response if it was not a notification
