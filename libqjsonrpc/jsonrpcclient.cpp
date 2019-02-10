@@ -25,7 +25,7 @@ void JsonRPCClient::dispatch(const JsonRPCRequest& jrequest) {
     httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     connect(&httpManager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(httpFinished(QNetworkReply*)));
+            this, SLOT(httpFinished(QNetworkReply*)),Qt::UniqueConnection);
     QJsonDocument doc(jrequest.data());
     QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
     httpManager.post(httpRequest, bytes);

@@ -4,6 +4,9 @@
 #include <jsonrpcserver.h>
 #include <jsonrpcclient.h>
 #include <jsonrpcresponse.h>
+#include <QMap>
+#include <QPair>
+#include <QRandomGenerator>
 
 class Handler : public RequestHandler {
 public:
@@ -12,7 +15,6 @@ public:
 
     JsonRPCResponse determineRPCResult(QString n, QJsonObject r) override {
         int temp = 0;
-        qDebug() << r;
         if(n == "sum") {
             int i = r["x"].toInt();
             int j = r["y"].toInt();
@@ -36,6 +38,8 @@ public:
     }
 };
 
+QMap<int, QPair<int, int>> test_data;
+
 class testClientData: public QObject {
     Q_OBJECT
 public:
@@ -44,7 +48,8 @@ public slots:
     void clientDataReady(const JsonRPCResponse& r) {
         qDebug() << "received result is " << r.id() << r.jsonrpcV() << r.result() <<
                  r.errorCode() << r.errorData() << r.errorMessage();
-        QCOMPARE(2, r.result().toInt());
+        int expected = test_data[r.id()].first + test_data[r.id()].second;
+        QCOMPARE(expected, r.result().toInt());
     }
 
 };
@@ -68,6 +73,7 @@ private :
     testClientData m_testClientData;
 };
 
+
 JsonRPCServerTest::JsonRPCServerTest(QObject* parent):
     QObject(parent), m_portNumber(8383) {
 }
@@ -76,29 +82,36 @@ JsonRPCServerTest::~JsonRPCServerTest() {
 }
 
 void JsonRPCServerTest::initTestCase() {
+
+    for(int i = 1 ; i <= 1000 ; ++i) {
+        int n1 = QRandomGenerator::global()->generate()%1000+1;
+        int n2 = QRandomGenerator::global()->generate()%1000+1;
+        test_data.insert(i, QPair<int, int>(n1, n2));
+    }
+
     m_server.setFactory(&m_handlerFactory);
     QVERIFY(m_server.listen(m_portNumber));
 }
 
 void JsonRPCServerTest::client() {
     m_client.setUrl("http://127.0.0.1:" + QString::number(m_portNumber));
-    int i = 1;
-    //    for(int i = 0; i < 2; ++i) {
-    QJsonObject jobj;
-    jobj["x"] = i;
-    jobj["y"] = i;
-    JsonRPCRequest req(1, "sum", jobj);
-    qDebug() << "Dispatching " << req.data();
-
     connect(&m_client, SIGNAL(ResultRecieved(JsonRPCResponse)),
             &m_testClientData, SLOT(clientDataReady(const JsonRPCResponse)));
-    m_client.dispatch(req);
+
+    for(int i = 1; i <= 1000; ++i) {
+        QJsonObject jobj;
+        jobj["x"] = test_data[i].first ;
+        jobj["y"] = test_data[i].second;
+        JsonRPCRequest req(i, "sum", jobj);
+//        qDebug() << "Dispatching " << req.data();
+        m_client.dispatch(req);
+    }
     QTest::qWait(10000);
 }
 
 void JsonRPCServerTest::cleanupTestCase() {
     m_server.close();
-    QTest::qWait(1000);
+    QTest::qWait(10000);
 }
 
 QTEST_GUILESS_MAIN(JsonRPCServerTest)
