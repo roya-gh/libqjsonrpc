@@ -10,10 +10,22 @@ JSonRPCServer::JSonRPCServer(QObject* parent):
 }
 
 void JSonRPCServer::setFactory(RequestHandlerFactory* f) {
-    factory = f;
+    m_factory = f;
 }
 
 void JSonRPCServer::handleNewHttpRequest(QHttpRequest* req, QHttpResponse* resp) {
-    q.push_back(factory->createHandler(req, resp));
+    deleteDoneHandlers();
+    m_handlerQueue.push_back(m_factory->createHandler(req, resp));
+}
+
+void JSonRPCServer::deleteDoneHandlers() {
+    for(QList<RequestHandler*>::iterator i = m_handlerQueue.begin(); i != m_handlerQueue.end();) {
+        if((*i)->isDone()) {
+            delete *i;
+            i = m_handlerQueue.erase(i);
+        } else {
+            ++i;
+        }
+    }
 }
 

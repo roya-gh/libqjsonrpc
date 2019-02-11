@@ -14,19 +14,33 @@ public:
     }
 
     JsonRPCResponse determineRPCResult(QString n, QJsonObject r) override {
-        int temp = 0;
+        JsonRPCResponse res;
         if(n == "sum") {
+            if(!(r["x"] == QJsonValue::Undefined) && !(r["y"] == QJsonValue::Undefined)
+                    && r["x"].isDouble() && r["y"].isDouble()) {
+                int i = r["x"].toDouble();
+                int j = r["y"].toDouble();
+                double  temp = i + j;
+                res.setResult(temp);
+            } else {
+                res.setErrorCode(-32602);
+                res.setErrorMessage("Invalid method parameter(s).");
+            }
+        } else if(n == "sub") {
             int i = r["x"].toInt();
             int j = r["y"].toInt();
-            temp = i + j;
-        } else   if(n == "sub") {
-            int i = r["x"].toInt();
-            int j = r["y"].toInt();
-            temp = i - j;
+            int temp = i - j;
+            res.setResult(temp);
+        } else if(n == "toUpper") {
+            QString i = r["str"].toString();
+            QString temp = i.toUpper();
+            res.setResult(temp);
         }
         //TODO: handle error
-        JsonRPCResponse res;
-        res.setResult(temp);
+        else {
+            res.setErrorCode(-32601);
+            res.setErrorMessage("Method not found");
+        }
         return res;
     }
 };
@@ -49,7 +63,10 @@ public slots:
         qDebug() << "received result is " << r.id() << r.jsonrpcV() << r.result() <<
                  r.errorCode() << r.errorData() << r.errorMessage();
         int expected = test_data[r.id()].first + test_data[r.id()].second;
-        QCOMPARE(expected, r.result().toInt());
+        if(r.id() <= 1000) {
+            QCOMPARE(expected, r.result().toInt());
+        }
+
     }
 
 };
@@ -84,8 +101,8 @@ JsonRPCServerTest::~JsonRPCServerTest() {
 void JsonRPCServerTest::initTestCase() {
 
     for(int i = 1 ; i <= 1000 ; ++i) {
-        int n1 = QRandomGenerator::global()->generate()%1000+1;
-        int n2 = QRandomGenerator::global()->generate()%1000+1;
+        int n1 = QRandomGenerator::global()->generate() % 1000 + 1;
+        int n2 = QRandomGenerator::global()->generate() % 1000 + 1;
         test_data.insert(i, QPair<int, int>(n1, n2));
     }
 
@@ -103,9 +120,15 @@ void JsonRPCServerTest::client() {
         jobj["x"] = test_data[i].first ;
         jobj["y"] = test_data[i].second;
         JsonRPCRequest req(i, "sum", jobj);
-//        qDebug() << "Dispatching " << req.data();
+        //        qDebug() << "Dispatching " << req.data();
         m_client.dispatch(req);
     }
+
+    QJsonObject o;
+    o["str"] = "hello";
+    JsonRPCRequest req(1500, "toUpper", o);
+    m_client.dispatch(req);
+
     QTest::qWait(10000);
 }
 

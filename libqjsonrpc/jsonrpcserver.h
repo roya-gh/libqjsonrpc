@@ -1,5 +1,6 @@
 #ifndef JSONRPCSERVER_H
 #define JSONRPCSERVER_H
+
 #include <QObject>
 #include <qhttpserver.h>
 #include <qhttprequest.h>
@@ -24,8 +25,9 @@ public slots:
 
 private :
 //    QHttpServer* server;
-    RequestHandlerFactory* factory;
-    QQueue<RequestHandler*> q;
+    RequestHandlerFactory* m_factory;
+    QList<RequestHandler*> m_handlerQueue;
+    void deleteDoneHandlers();
 };
 
 #endif // JSONRPCSERVER_H

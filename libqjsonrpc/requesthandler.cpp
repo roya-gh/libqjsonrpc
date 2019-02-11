@@ -4,14 +4,18 @@
 #include <QJsonObject>
 
 RequestHandler::RequestHandler(QHttpRequest* req, QHttpResponse* resp, QObject* parent):
-    QObject(parent), m_req(req), m_resp(resp) {
+    QObject(parent), m_req(req), m_resp(resp),m_done(false) {
     connect(m_req, SIGNAL(data(QByteArray)), this, SLOT(dataReceived(QByteArray)));
     connect(m_req, SIGNAL(end()), this, SLOT(handleRPCRequest()));
+    connect(m_resp,SIGNAL(done()),this,SLOT(setDone()));
 }
 
 RequestHandler::~RequestHandler() {
-    m_req->deleteLater();
-    m_resp->deleteLater();
+}
+
+bool RequestHandler::isDone()
+{
+    return m_done;
 }
 
 void RequestHandler::dataReceived(const QByteArray& data) {
@@ -35,5 +39,10 @@ void RequestHandler::handleRPCRequest() {
         m_resp->write(bytes);
     }
     m_resp->end();
+}
+
+void RequestHandler::setDone()
+{
+    m_done=true;
 }
 
