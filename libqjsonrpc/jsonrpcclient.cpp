@@ -12,7 +12,7 @@
 
 
 JsonRPCClient::JsonRPCClient(const QUrl& url, QObject* parent):
-    QObject(parent), m_url(url) {
+    QObject{parent}, m_url{url} {
 }
 
 void JsonRPCClient::setUrl(const QUrl& url) {
@@ -21,12 +21,12 @@ void JsonRPCClient::setUrl(const QUrl& url) {
 
 
 void JsonRPCClient::dispatch(const JsonRPCRequest& jrequest) {
-    QNetworkRequest httpRequest(m_url);
+    QNetworkRequest httpRequest{m_url};
     httpRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     connect(&httpManager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(httpFinished(QNetworkReply*)),Qt::UniqueConnection);
-    QJsonDocument doc(jrequest.data());
+            this, SLOT(httpFinished(QNetworkReply*)), Qt::UniqueConnection);
+    QJsonDocument doc{jrequest.data()};
     QByteArray bytes = doc.toJson(QJsonDocument::JsonFormat::Compact);
     httpManager.post(httpRequest, bytes);
 }
@@ -37,31 +37,31 @@ void JsonRPCClient::httpFinished(QNetworkReply* rep) {
         QJsonDocument j = QJsonDocument::fromJson(r);
         QJsonObject rootObject = j.object();
         if(rootObject.contains("error")) {
-            JsonRPCResponse err(
+            JsonRPCResponse err{
                 rootObject["id"].toInt(),
                 rootObject["error"].toObject()["code"].toInt(),
                 rootObject["error"].toObject()["message"].toString(),
                 rootObject["error"].toObject()["data"].toObject(),
-                rootObject["jsonrpc"].toString());
+                rootObject["jsonrpc"].toString()};
             emit ResultRecieved(err);
         } else {
             if(rootObject["id"] != QJsonValue::Null) {
-                JsonRPCResponse res(
+                JsonRPCResponse res{
                     rootObject["id"].toInt(),
                     rootObject["result"].toVariant(),
                     rootObject["jsonrpc"].toString()
-                );
+                };
                 emit ResultRecieved(res);
             } else {
-                JsonRPCResponse res(
+                JsonRPCResponse res{
                     rootObject["result"].toVariant(),
                     rootObject["jsonrpc"].toString()
-                );
+                };
                 emit ResultRecieved(res);
             }
         }
     } else {
-        JsonRPCResponse err(0, rep->error(), rep->errorString());
+        JsonRPCResponse err{0, rep->error(), rep->errorString()};
         emit ResultRecieved(err);
     }
     rep->deleteLater();

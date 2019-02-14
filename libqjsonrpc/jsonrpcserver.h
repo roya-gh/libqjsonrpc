@@ -10,21 +10,20 @@
 #include <QQueue>
 #include "libqjsonrpc_global.h"
 
-class LIBQJSONRPCSHARED_EXPORT JSonRPCServer : public QHttpServer
-{
+class LIBQJSONRPCSHARED_EXPORT JSonRPCServer : public QHttpServer {
     Q_OBJECT
 public:
-    explicit JSonRPCServer(QObject *parent = nullptr);
-    ~JSonRPCServer()=default;
+    explicit JSonRPCServer(QObject* parent = nullptr);
+    ~JSonRPCServer() = default;
     void setFactory(RequestHandlerFactory*);
 
 signals:
 
 public slots:
-    void handleNewHttpRequest(QHttpRequest *req, QHttpResponse *resp);
+    void handleNewHttpRequest(QHttpRequest* req, QHttpResponse* resp);
 
 private :
-//    QHttpServer* server;
+    //    QHttpServer* server;
     RequestHandlerFactory* m_factory;
     QList<RequestHandler*> m_handlerQueue;
     void deleteDoneHandlers();

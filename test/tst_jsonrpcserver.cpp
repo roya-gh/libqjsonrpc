@@ -10,7 +10,7 @@
 
 class Handler : public RequestHandler {
 public:
-    Handler(QHttpRequest* req, QHttpResponse* resp): RequestHandler(req, resp) {
+    Handler(QHttpRequest* req, QHttpResponse* resp): RequestHandler{req, resp} {
     }
 
     JsonRPCResponse determineRPCResult(QString n, QJsonObject r) override {
@@ -48,7 +48,7 @@ public:
 class HandlerFactory : public RequestHandlerFactory {
 public:
     RequestHandler* createHandler(QHttpRequest* req, QHttpResponse* resp)const override {
-        return new Handler(req, resp);
+        return new Handler{req, resp};
     }
 };
 
@@ -92,7 +92,7 @@ private :
 
 
 JsonRPCServerTest::JsonRPCServerTest(QObject* parent):
-    QObject(parent), m_portNumber(8383) {
+    QObject(parent), m_portNumber{8383} {
 }
 
 JsonRPCServerTest::~JsonRPCServerTest() {
@@ -119,14 +119,14 @@ void JsonRPCServerTest::client() {
         QJsonObject jobj;
         jobj["x"] = test_data[i].first ;
         jobj["y"] = test_data[i].second;
-        JsonRPCRequest req(i, "sum", jobj);
+        JsonRPCRequest req{i, "sum", jobj};
         //        qDebug() << "Dispatching " << req.data();
         m_client.dispatch(req);
     }
 
     QJsonObject o;
     o["str"] = "hello";
-    JsonRPCRequest req(1500, "toUpper", o);
+    JsonRPCRequest req{1500, "toUpper", o};
     m_client.dispatch(req);
 
     QTest::qWait(10000);

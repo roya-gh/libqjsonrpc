@@ -7,7 +7,7 @@
 JsonRPCRequest::JsonRPCRequest(int id, const QString& methodName,
                                const QVariant& params, const QString jrpc,
                                QObject* parent):
-    QObject(parent), m_data() {
+    QObject(parent) {
     setId(id);
     setParams(params);
     if(!methodName.isEmpty() && methodName != nullptr) {
@@ -18,7 +18,7 @@ JsonRPCRequest::JsonRPCRequest(int id, const QString& methodName,
 
 JsonRPCRequest::JsonRPCRequest(const QString& methodName, const QVariant& params,
                                const QString jrpc, QObject* parent):
-    QObject(parent), m_data() {
+    QObject(parent) {
     setParams(params);
     if(!methodName.isEmpty() && methodName != nullptr) {
         setMethodName(methodName);
@@ -48,7 +48,7 @@ void JsonRPCRequest::setId(int id) {
 }
 
 QJsonValue JsonRPCRequest::toJsonValue(const QVariant& input) {
-    switch(input.type()) {
+    switch(static_cast<QMetaType::Type>(input.type())) {
         case QMetaType::Int:
             return input.toInt();
             break;
@@ -105,7 +105,7 @@ QJsonValue JsonRPCRequest::toJsonValue(const QVariant& input) {
             break;
 
         default:
-            return QJsonValue();
+            return QJsonValue{};
             break;
     }
 }

@@ -10,17 +10,17 @@ public:
     JsonRPCResponse();
     JsonRPCResponse(int id, const QVariant& result,
                     const QString& jsonrpcV = "2");
-    JsonRPCResponse(const QVariant& result ,
+    JsonRPCResponse(const QVariant& result,
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(int id,
-                    int errorCode ,
-                    const QString& errorMessage ,
-                    const QJsonObject& errorData = QJsonObject(),
+                    int errorCode,
+                    const QString& errorMessage,
+                    const QJsonObject& errorData = QJsonObject{},
                     const QString& jsonrpcV = "2");
     JsonRPCResponse(
         int errorCode,
-        const QString& errorMessage ,
-        const QJsonObject& errorData = QJsonObject(),
+        const QString& errorMessage,
+        const QJsonObject& errorData = QJsonObject{},
         const QString& jsonrpcV = "2");
 
     ~JsonRPCResponse() = default;
@@ -38,7 +38,7 @@ public slots:
     void setErrorCode(int);
     void setErrorMessage(const QString&);
     void setErrorData(const QJsonObject&);
-    void setResult(const QVariant &);
+    void setResult(const QVariant&);
 
 private :
     QJsonObject m_data;

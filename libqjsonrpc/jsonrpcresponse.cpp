@@ -17,8 +17,7 @@ JsonRPCResponse::JsonRPCResponse(int id, int errorCode, const QString& errorMess
         setErrorData(errorData);
     }
 }
-JsonRPCResponse::JsonRPCResponse()
-{
+JsonRPCResponse::JsonRPCResponse() {
     setJsonrpcV("2");
 }
 
@@ -116,7 +115,7 @@ int JsonRPCResponse::id()const {
 }
 
 QJsonValue JsonRPCResponse::toJsonValue(const QVariant& input) {
-    switch(input.type()) {
+    switch(static_cast<QMetaType::Type>(input.type())) {
         case QMetaType::Int:
             return input.toInt();
             break;

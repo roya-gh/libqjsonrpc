@@ -5,8 +5,7 @@
 #include "libqjsonrpc_global.h"
 
 
-class LIBQJSONRPCSHARED_EXPORT RequestHandlerFactory
-{
+class LIBQJSONRPCSHARED_EXPORT RequestHandlerFactory {
 public:
     explicit RequestHandlerFactory();
     ~RequestHandlerFactory();

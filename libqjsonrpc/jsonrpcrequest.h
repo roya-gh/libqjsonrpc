@@ -8,13 +8,13 @@
 class LIBQJSONRPCSHARED_EXPORT JsonRPCRequest: public QObject {
 public:
     JsonRPCRequest(int id,
-                   const QString& methodName = QString(),
-                   const QVariant& params = QVariant(),
+                   const QString& methodName = QString{},
+                   const QVariant& params = QVariant{},
                    const QString jrpc = "2.0",
                    QObject* parent = nullptr);
 
-    JsonRPCRequest(const QString& methodName = QString(),
-                   const QVariant& params = QVariant(),
+    JsonRPCRequest(const QString& methodName = QString{},
+                   const QVariant& params = QVariant{},
                    const QString jrpc = "2.0",
                    QObject* parent = nullptr);
 

@@ -4,7 +4,7 @@
 #include <QJsonObject>
 
 JSonRPCServer::JSonRPCServer(QObject* parent):
-    QHttpServer(parent) {
+    QHttpServer{parent} {
     connect(this, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)),
             this, SLOT(handleNewHttpRequest(QHttpRequest*, QHttpResponse*)));
 }
